@@ -14,6 +14,7 @@
         name: "{{ item }}"
         update_cache: yes
       with_items:
+        - build-essential 
         - aptitude
         - snapd
         - git
@@ -33,7 +34,7 @@
     #       - intellij-idea-community
     #       - gitkraken
     #     classic: yes
-    - name: change home directory name
+    - name: change home directory names
       shell: LANG=C xdg-user-dirs-gtk-update
     - name: Install python package
       pip:
