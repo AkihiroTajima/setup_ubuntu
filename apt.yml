@@ -1,0 +1,49 @@
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: add ppa:teejee2008/ppa
+      apt_repository:
+        repo: ppa:teejee2008/ppa
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 # One day
+    - name: Install common tools
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      with_items:
+        - aptitude
+        - snapd
+        - git
+        - python-pip
+        - python3-pip
+        - xdg-user-dirs-gtk
+        - timeshift
+        - texlive-lang-cjk
+        - texlive-lang-japanese
+        - xdvik-ja
+        - texlive-fonts-recommended
+        - texlive-fonts-extra
+    # - name: Install snap package
+    #   snap:
+    #     name:
+    #       - code
+    #       - intellij-idea-community
+    #       - gitkraken
+    #     classic: yes
+    - name: change home directory name
+      shell: LANG=C xdg-user-dirs-gtk-update
+    - name: Install python package
+      pip:
+        name: 
+          - numpy
+          - pandas
+          - matplotlib
+          - sklearn
+          - tensorflow-gpu
+          - keras
+          - xgboost 
+        extra_args: --user
+        executable: pip3
