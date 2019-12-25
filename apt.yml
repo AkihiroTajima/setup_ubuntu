@@ -20,6 +20,7 @@
         - git
         - python-pip
         - python3-pip
+        - jupyter-notebook
         - xdg-user-dirs-gtk
         - timeshift
         - texlive-lang-cjk
