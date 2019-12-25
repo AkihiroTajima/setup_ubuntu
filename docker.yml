@@ -9,6 +9,18 @@
         upgrade: yes
         update_cache: yes
         cache_valid_time: 86400 # One day
+    - name: remove old version
+      apt:
+        state: absent
+        purge: yes
+        autoremove: yes
+        name: "{{ item }}"
+      with_items:
+        - docker
+        - docker-engine
+        - docker.io
+        - containerd
+        - runc
     - name: apt install packages
       apt: 
         name: "{{ item }}"
@@ -23,7 +35,7 @@
       shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
     - name: Check docker gpg key.
-      shell: apt-key fingerprint 0EBFCD88 | grep 0EBFCD88
+      shell: apt-key fingerprint 0EBFCD88
       ignore_errors: True
 
     - name: define lsb_release -cs
@@ -32,9 +44,13 @@
       register: lsb_release
 
     - name: set up the stable repository
-      shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+      shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 
     - name: Install docker-ce.
-      apt: name=docker-ce state=present update_cache=yes
-      notify:
-        - restart docker
+      apt:
+        name: "{{ item }}"
+        update_cache: yes
+      with_items:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
